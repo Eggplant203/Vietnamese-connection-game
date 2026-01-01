@@ -89,6 +89,34 @@ export const leaderboardAPI = {
   },
 };
 
+export const adminAPI = {
+  login: async (password: string): Promise<{ success: boolean; token?: string; error?: string }> => {
+    const response = await api.post('/admin/login', { password });
+    return response.data;
+  },
+
+  uploadPuzzle: async (puzzle: any, token: string): Promise<any> => {
+    const response = await api.post('/admin/upload', puzzle, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    return response.data;
+  },
+
+  verifyPuzzle: async (puzzleId: string, token: string): Promise<any> => {
+    const response = await api.post(`/admin/verify/${puzzleId}`, {}, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    return response.data;
+  },
+
+  deletePuzzle: async (puzzleId: string, token: string): Promise<any> => {
+    const response = await api.delete(`/admin/puzzle/${puzzleId}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    return response.data;
+  }
+};
+
 export const userAPI = {
   createOrGetUser: async (username: string, email?: string): Promise<User> => {
     const response = await api.post<APIResponse<User>>('/users', { username, email });

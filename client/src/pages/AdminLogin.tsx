@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Lock, Eye, EyeOff } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { adminAPI } from '../services/api';
 
 export const AdminLogin: React.FC = () => {
   const [password, setPassword] = React.useState('');
@@ -13,22 +14,15 @@ export const AdminLogin: React.FC = () => {
     setLoading(true);
 
     try {
-      // Check password với backend
-      const response = await fetch('/api/admin/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password })
-      });
-
-      const data = await response.json();
+      const data = await adminAPI.login(password);
 
       if (data.success) {
         // Lưu token vào localStorage
-        localStorage.setItem('admin_token', data.token);
+        localStorage.setItem('admin_token', data.token!);
         toast.success('Đăng nhập thành công!');
         window.location.href = '/admin';
       } else {
-        toast.error('Mật khẩu không đúng!');
+        toast.error(data.error || 'Mật khẩu không đúng!');
         setPassword('');
       }
     } catch (error) {
