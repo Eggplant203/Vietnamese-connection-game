@@ -6,7 +6,7 @@ A Vietnamese-language puzzle game inspired by NYT Connections, where players fin
 
 ## � Play Online
 
-**Live Demo:** https://https://connections-vie.netlify.app/
+**Live Demo:** https://connections-vie.netlify.app/
 
 > **Note:** Backend uses free tier hosting. If you experience delays when creating/joining rooms, please wait 1-2 minutes for the server to wake up from sleep mode.
 
