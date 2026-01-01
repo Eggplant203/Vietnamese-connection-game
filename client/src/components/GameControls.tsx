@@ -41,7 +41,7 @@ export const GameControls: React.FC = () => {
       }
     } catch (error) {
       toast.error('Có lỗi xảy ra. Vui lòng thử lại!');
-      console.error(error);
+      // console.error(error);
     } finally {
       setIsSubmitting(false);
     }

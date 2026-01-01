@@ -57,7 +57,7 @@ export const GamePage: React.FC = () => {
               ? 'Lỗi kết nối database. Vui lòng kiểm tra kết nối!' 
               : 'Lỗi khi tạo puzzle từ AI. Vui lòng kiểm tra GEMINI_API_KEY!');
         toast.error(errorMsg);
-        console.error('Failed to load puzzle:', error);
+        // console.error('Failed to load puzzle:', error);
       } finally {
         if (!cancelled) {
           setLoading(false);

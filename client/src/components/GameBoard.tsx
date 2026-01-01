@@ -15,7 +15,19 @@ export const GameBoard: React.FC = () => {
       const shuffled = [...allWords].sort(() => Math.random() - 0.5);
       setWordPositions(shuffled);
     }
-  }, [currentPuzzle?.id]);
+  }, [currentPuzzle]);
+
+  const shuffleWords = React.useCallback(() => {
+    setWordPositions(current => [...current].sort(() => Math.random() - 0.5));
+  }, []);
+
+  // Expose shuffle function to parent
+  React.useEffect(() => {
+    (window as any).__shuffleWords = shuffleWords;
+    return () => {
+      delete (window as any).__shuffleWords;
+    };
+  }, [shuffleWords]);
 
   if (!currentPuzzle) {
     return (
@@ -32,18 +44,6 @@ export const GameBoard: React.FC = () => {
         group.words.some((w) => w.text === word.text)
       )
   );
-
-  const shuffleWords = () => {
-    setWordPositions([...remainingWords].sort(() => Math.random() - 0.5));
-  };
-
-  // Expose shuffle function to parent
-  React.useEffect(() => {
-    (window as any).__shuffleWords = shuffleWords;
-    return () => {
-      delete (window as any).__shuffleWords;
-    };
-  }, [remainingWords]);
 
   return (
     <div className="space-y-4">

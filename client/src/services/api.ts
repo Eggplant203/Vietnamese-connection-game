@@ -1,9 +1,7 @@
 import axios from 'axios';
 import type { Puzzle, AttemptResult, LeaderboardEntry, User, APIResponse } from '@shared/Types';
 
-const API_URL = (import.meta as any).env?.VITE_API_URL || 
-               (typeof window !== 'undefined' && (window as any).__API_URL__) || 
-               '/api';
+const API_URL = (import.meta as any).env?.VITE_API_URL || '/api';
 
 const api = axios.create({
   baseURL: API_URL,

@@ -32,7 +32,7 @@ export const saveStats = (stats: UserStats): void => {
   try {
     localStorage.setItem(STATS_KEY, JSON.stringify(stats));
   } catch (error) {
-    console.error('Failed to save stats:', error);
+    // console.error('Failed to save stats:', error);
   }
 };
 
@@ -57,6 +57,6 @@ export const resetStats = (): void => {
   try {
     localStorage.removeItem(STATS_KEY);
   } catch (error) {
-    console.error('Failed to reset stats:', error);
+    // console.error('Failed to reset stats:', error);
   }
 };

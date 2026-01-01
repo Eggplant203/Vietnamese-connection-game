@@ -16,22 +16,10 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Middleware
-app.use(helmet({
-  crossOriginEmbedderPolicy: false
-}));
-
-const corsOrigins = [
-  'http://localhost:5173',
-  'http://localhost:3000',
-  'https://vn-connections.netlify.app',
-  process.env.CLIENT_URL
-].filter((origin): origin is string => Boolean(origin));
-
+app.use(helmet());
 app.use(cors({
-  origin: corsOrigins,
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
+  credentials: true
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

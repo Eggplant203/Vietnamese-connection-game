@@ -57,7 +57,7 @@ apiRouter.get('/archive', async (req, res) => {
 
     const publicPuzzle = {
       ...puzzle,
-      groups: puzzle.groups.map(g => ({
+      groups: puzzle.groups.map((g: any) => ({
         id: g.id,
         theme: g.theme,
         words: g.words,
@@ -89,7 +89,7 @@ apiRouter.get('/random', async (req, res) => {
     
     const publicPuzzle = {
       ...puzzle,
-      groups: puzzle.groups.map(g => ({
+      groups: puzzle.groups.map((g: any) => ({
         id: g.id,
         theme: g.theme,
         words: g.words,

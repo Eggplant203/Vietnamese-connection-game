@@ -80,7 +80,6 @@ export interface UserStats {
 
 export interface AIGenerateRequest {
   theme?: string;
-  level?: string;
 }
 
 export interface APIResponse<T = any> {
