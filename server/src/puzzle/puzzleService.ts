@@ -1,5 +1,5 @@
 import { query } from '../db';
-import { Puzzle, Group } from '../../../shared/Types';
+import { Puzzle, Group } from '../shared/Types';
 import { v4 as uuidv4 } from 'uuid';
 
 export class PuzzleService {

@@ -5,7 +5,9 @@
   "main": "dist/index.js",
   "scripts": {
     "dev": "tsx watch src/index.ts",
+    "prebuild": "node -e \"const fs=require('fs'),path=require('path');const src='../shared',dest='./src/shared';fs.mkdirSync(dest,{recursive:true});fs.readdirSync(src).filter(f=>f.endsWith('.ts')&&!f.endsWith('.d.ts')).forEach(f=>fs.copyFileSync(path.join(src,f),path.join(dest,f)));\"",
     "build": "npm install --include=dev && tsc",
+    "postbuild": "node -e \"const fs=require('fs');try{fs.rmSync('./src/shared',{recursive:true,force:true})}catch(e){}\"",
     "start": "node dist/index.js",
     "test": "jest",
     "test:watch": "jest --watch",

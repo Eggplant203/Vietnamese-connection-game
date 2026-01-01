@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { aiService } from '../ai/aiService';
 import { puzzleService } from '../puzzle/puzzleService';
 import { userService } from '../auth/userService';
-import { APIResponse, AttemptResult, AdminPuzzleUpload, Puzzle } from '../../../shared/Types';
+import { APIResponse, AttemptResult, AdminPuzzleUpload, Puzzle } from '../shared/Types';
 import { v4 as uuidv4 } from 'uuid';
 import jwt from 'jsonwebtoken';
 

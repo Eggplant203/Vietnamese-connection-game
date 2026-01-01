@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { puzzleService } from '../puzzle/puzzleService';
-import { AdminPuzzleUpload, APIResponse, Group } from '../../../shared/Types';
+import { AdminPuzzleUpload, APIResponse, Group } from '../shared/Types';
 import { v4 as uuidv4 } from 'uuid';
 
 export const adminRouter = Router();
