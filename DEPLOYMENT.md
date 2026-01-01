@@ -1,8 +1,8 @@
-# 🚀 Deployment Guide - UPDATED
+# 🚀 Deployment Guide
 
 Hướng dẫn deploy ứng dụng VN Connections lên Render (backend) và Netlify (frontend).
 
-**✅ ĐÃ SỬA CÁC LỖI VÀ CHUẨN BỊ ĐẦY ĐỦ CHO DEPLOYMENT**
+**✅ Updated: January 2026 - Đã fix tất cả lỗi TypeScript, API routing, và SPA navigation**
 
 ---
 
@@ -50,13 +50,17 @@ git push -u origin main
 
 **Settings**:
 
-- **Name**: `vn-connections-backend` (hoặc tên khác)
+- **Name**: `vietnamese-connection-game` (hoặc tên khác)
 - **Region**: Singapore (hoặc gần nhất)
 - **Branch**: `main`
-- **Root Directory**: Leave blank
-- **Build Command**: `npm install && cd server && npm install && npm run build`
-- **Start Command**: `cd server && node dist/index.js`
+- **Root Directory**: `server`
+- **Build Command**: `npm install && npm run build`
+- **Start Command**: `npm start`
 - **Instance Type**: Free (hoặc Starter $7/month cho tốc độ cao hơn)
+
+**⚠️ LƯU Ý**: 
+- Build command tự động chạy `prebuild` script để copy shared types
+- Tất cả @types packages đã ở trong dependencies (không phải devDependencies)
 
 ### 2.3. Environment Variables (Render)
 
@@ -113,23 +117,41 @@ Kết quả mong đợi:
 
 ### 3.1. Create Netlify Site
 
-1. Đăng nhập [Netlify Dashboard](https://app.netlify.com/)
-2. Click **Add new site** → **Import an existing project**
-3. Choose GitHub → Select repository
-4. Cấu hình:
+**⚠️ QUAN TRỌNG**: Project đã có file `netlify.toml` ở root directory, Netlify sẽ tự động sử dụng config này!
 
-**Build Settings**:
+**Nội dung `netlify.toml`**:
+```toml
+[build]
+  base = "client"
+  command = "npm run build"
+  publish = "dist"
 
-- **Base directory**: Leave blank
-- **Build command**: `npm install && cd client && npm install && npm run build`
-- **Publish directory**: `client/dist`
-- **Branch**: `main`
+[build.environment]
+  VITE_API_URL = "https://vietnamese-connection-game.onrender.com/api"
 
-### 3.2. Environment Variables (Netlify)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+```
 
-Vào **Site settings** → **Environment variables** → Add:
+### 3.2. Cập nhật Backend URL
 
-```env
+**Bước quan trọng**: Sau khi có URL từ Render (bước 2.4), cần cập nhật:
+
+1. Mở file `netlify.toml` 
+2. Thay đổi `VITE_API_URL` thành URL backend thực tế:
+   ```toml
+   VITE_API_URL = "https://your-actual-service.onrender.com/api"
+   ```
+3. Commit và push:
+   ```bash
+   git add netlify.toml
+   git commit -m "Update backend API URL"
+   git push
+   ```
+
+**Hoặc**: Vào Netlify Dashboard → Site settings → Environment variables → Override `VITE_API_URL`
 VITE_API_URL=https://your-service.onrender.com/api
 ```
 
@@ -137,9 +159,14 @@ VITE_API_URL=https://your-service.onrender.com/api
 
 ### 3.3. Deploy
 
-1. Click **Deploy site**
+1. Netlify sẽ tự động trigger deploy khi push code
 2. Đợi build (~2-3 phút)
 3. Copy **Site URL**: `https://your-app.netlify.app`
+
+**File quan trọng đã được setup**:
+- ✅ `client/public/_redirects` - Handle SPA routing (tránh 404 khi refresh)
+- ✅ `client/.env.production` - Production API URL
+- ✅ `client/src/env.d.ts` - TypeScript support cho Vite env
 
 ### 3.4. Update Backend CORS
 
@@ -149,7 +176,7 @@ Quay lại **Render** → Environment Variables → Cập nhật:
 CORS_ORIGIN=https://your-app.netlify.app
 ```
 
-**Manual Deploy** backend để áp dụng thay đổi.
+Click **Manual Deploy** để áp dụng thay đổi.
 
 ---
 
@@ -179,29 +206,58 @@ curl https://your-service.onrender.com/health
 # Get random puzzle from database
 curl https://your-service.onrender.com/api/archive
 ```
+Build Fails với TypeScript Errors
 
----
+**Lỗi**: `Cannot find module 'express'`, `Cannot find name 'process'`
 
-## 🔧 Troubleshooting
+**Nguyên nhân**: @types packages bị thiếu hoặc ở devDependencies
 
-### Backend không start được
+**Giải pháp**: ✅ ĐÃ FIX - Tất cả @types packages đã được move vào `dependencies` trong `server/package.json`
 
-- ✅ Kiểm tra logs trong Render Dashboard
-- ✅ Verify `DATABASE_URL` đúng format
-- ✅ Test connection string trực tiếp với `psql` hoặc database tool
+### Backend Build Fails - Cannot find '../shared/Types'
 
-### Frontend không connect được backend
+**Lỗi**: `Cannot find module '../shared/Types'`
 
-- ✅ Kiểm tra `VITE_API_URL` có đúng URL Render
-- ✅ Verify `CORS_ORIGIN` ở backend match với Netlify URL
-- ✅ Check Network tab trong DevTools để xem lỗi CORS
+**Nguyên nhân**: Shared types folder không được copy vào server
 
-### Admin login không được
+**Giải pháp**: ✅ ĐÃ FIX - `prebuild` script tự động copy `../shared` vào `server/src/shared`
 
-- ✅ Verify `ADMIN_PASSWORD` trong Render env variables
-- ✅ Check console logs khi submit form
-- ✅ Kiểm tra JWT_SECRET đã set chưa
+### Frontend gọi sai API endpoint (404)
 
+**Lỗi**: `GET /archive 404` thay vì `/api/archive`
+
+**Nguyên nhân**: `VITE_API_URL` không được set đúng
+
+**Giải pháp**: 
+- ✅ Kiểm tra `netlify.toml` có đúng backend URL
+- ✅ Hoặc set trong Netlify env variables
+- ✅ Verify build log có log: `VITE_API_URL = "https://..."`
+
+### Admin panel bị 404 (Netlify)
+
+**Lỗi**: "Page not found" khi truy cập `/admin` hoặc `/admin/login`
+
+**Nguyên nhân**: SPA routing không được config
+
+**Giải pháp**: ✅ ĐÃ FIX
+- `client/public/_redirects` file đã có
+- `netlify.toml` có redirects config
+- Tất cả routes → `index.html` với status 200
+
+### Admin login gọi sai endpoint
+
+**Lỗi**: `POST https://your-app.netlify.app/api/admin/login 404`
+ - Auto enabled
+- Setup **Custom Domain** nếu có
+- ✅ **Redirects đã được config** trong `netlify.toml` và `client/public/_redirects`
+- Monitor builds trong **Deploys** tab CORS Error
+
+**Lỗi**: `Access to XMLHttpRequest blocked by CORS policy`
+
+**Giải pháp**:
+- ✅ Kiểm tra `CORS_ORIGIN` trong Render = Netlify URL chính xác
+- ✅ Không có trailing slash: `https://app.netlify.app` ✅, `https://app.netlify.app/` ❌
+- ✅ Manual Deploy backend sau khi thay đổi env
 ### AI puzzle không generate được
 
 - ✅ Verify `GEMINI_API_KEY` còn quota
@@ -232,9 +288,20 @@ Tạo file `client/public/_redirects`:
 
 ---
 
-## 🔐 Security Checklist
+**Option 1**: Trong `netlify.toml` (recommended)
+```toml
+[build.environment]
+  VITE_API_URL = "https://your-service.onrender.com/api"
+```
 
-- ✅ JWT_SECRET ít nhất 32 ký tự random
+**Option 2**: Trong Netlify Dashboard
+```env
+VITE_API_URL=https://your-service.onrender.com/api
+```
+
+**Files liên quan**:
+- `client/.env.production` - Fallback cho production builds
+- `client/.env.local` - Development local (git ignored) JWT_SECRET ít nhất 32 ký tự random
 - ✅ ADMIN_PASSWORD mạnh (>12 ký tự, chữ + số + ký tự đặc biệt)
 - ✅ DATABASE_URL chứa `?sslmode=require`
 - ✅ CORS_ORIGIN chính xác URL frontend
@@ -261,18 +328,56 @@ CORS_ORIGIN=https://your-app.netlify.app
 
 ### Frontend (Netlify)
 
-```env
-VITE_API_URL=https://your-service.onrender.com/api
-```
+```📁 Project Structure (Deployment Relevant)
 
----
+```
+connections/
+├── netlify.toml              # Netlify config (build + env + redirects)
+├── server/
+│   ├── package.json          # @types ở dependencies, có prebuild script
+│   ├── tsconfig.json         # types: ["node"], typeRoots config
+│   └── src/
+│       └── shared/           # Auto-copied từ ../shared qua prebuild
+└── client/
+    ├── .env.production       # Production API URL
+    ├── .env.local           # Development (git ignored)
+    ├── src/
+    │   ├── env.d.ts         # Vite env types
+    │   └── services/
+    │       └── api.ts       # Sử dụng VITE_API_URL
+    └── public/
+        └── _redirects       # SPA routing fix
+```
 
 ## 🆘 Support
 
 Nếu gặp vấn đề:
 
-1. Check Render logs: Dashboard → your-service → Logs
-2. Check Netlify logs: Site settings → Build & deploy → Deploy log
+1. **Backend issues**: 
+   - Check Render logs: Dashboard → your-service → Logs
+   - Verify all env variables are set
+   - Test health endpoint: `https://your-service.onrender.com/health`
+
+2. **Frontend issues**:
+   - Check Netlify build logs: Site settings → Deploys → View log
+   - Open browser DevTools → Console/Network tab
+   - Verify API calls go to Render domain, not Netlify
+
+3. **TypeScript build errors**:
+   - Verify `server/package.json` có tất cả @types trong dependencies
+   - Check `server/tsconfig.json` có `"types": ["node"]`
+   - Ensure prebuild script runs successfully
+
+4. **Common fixes**:
+   - Clear Render/Netlify cache và rebuild
+   - Manual deploy sau khi thay đổi env variables
+   - Kiểm tra CORS_ORIGIN match chính xác với frontend URL
+
+---
+
+**Happy Deploying! 🎉**
+
+**Các lỗi phổ biến đã được fix sẵn trong code - chỉ cần config đúng env variables!: Site settings → Build & deploy → Deploy log
 3. Open browser DevTools → Console/Network tab
 4. Tạo issue trên GitHub repository
 
