@@ -1,5 +1,5 @@
 import { query } from '../db';
-import { User } from '../../../shared/Types';
+import { User } from '../shared/Types';
 
 export class UserService {
   async createUser(username: string, email?: string): Promise<User> {
