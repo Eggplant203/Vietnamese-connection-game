@@ -4,11 +4,13 @@ A Vietnamese-language puzzle game inspired by NYT Connections, where players fin
 
 ![Gameplay](pictures/gameplay.png)
 
-## � Play Online
+## 🌐 Play Online
 
 **Live Demo:** https://connections-vie.netlify.app/
 
-> **Note:** Backend uses free tier hosting. If you experience delays when creating/joining rooms, please wait 1-2 minutes for the server to wake up from sleep mode.
+**Backend API:** https://vietnamese-connection-game.onrender.com/health
+
+> **Note:** Backend uses free tier hosting. If you experience delays, please wait 1-2 minutes for the server to wake up from sleep mode.
 
 ## �🎮 Features
 
