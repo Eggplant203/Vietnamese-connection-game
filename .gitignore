@@ -1,0 +1,15 @@
+node_modules/
+dist/
+build/
+.env
+.env.local
+*.log
+.DS_Store
+coverage/
+.vscode/
+*.sqlite
+*.db
+.cache/
+
+# Temporary folder during build (cleaned after build)
+server/src/shared/

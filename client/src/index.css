@@ -1,0 +1,99 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-gradient-to-br from-slate-50 to-slate-100 min-h-screen font-sans;
+  }
+}
+
+@layer components {
+  .word-card {
+    @apply bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 
+           cursor-pointer select-none font-medium text-gray-800
+           flex items-center justify-center text-center p-4
+           border-2 border-transparent hover:border-blue-400
+           transform hover:scale-105 active:scale-95;
+  }
+
+  .word-card.selected {
+    @apply bg-blue-500 text-white border-blue-600 shadow-lg scale-105;
+  }
+
+  .word-card.found {
+    @apply cursor-default hover:scale-100 active:scale-100;
+  }
+
+  .group-card {
+    @apply rounded-xl p-6 shadow-lg text-white font-semibold
+           transform transition-all duration-500;
+  }
+
+  .btn-primary {
+    @apply bg-blue-600 hover:bg-blue-700 text-white font-semibold
+           py-3 px-8 rounded-xl shadow-lg hover:shadow-xl
+           transition-all duration-200 transform hover:scale-105 active:scale-95
+           disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100;
+  }
+
+  .btn-secondary {
+    @apply bg-gray-600 hover:bg-gray-700 text-white font-semibold
+           py-3 px-8 rounded-xl shadow-lg hover:shadow-xl
+           transition-all duration-200 transform hover:scale-105 active:scale-95;
+  }
+
+  .stat-card {
+    @apply bg-white rounded-xl p-6 shadow-lg hover:shadow-xl
+           transition-all duration-300 transform hover:scale-105;
+  }
+
+  /* 3D Flip Card Utilities */
+  .perspective-1000 {
+    perspective: 1000px;
+  }
+
+  .preserve-3d {
+    transform-style: preserve-3d;
+  }
+
+  .backface-hidden {
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+
+  .rotate-y-180 {
+    transform: rotateY(180deg);
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Animations */
+@keyframes gradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradient 3s ease infinite;
+}

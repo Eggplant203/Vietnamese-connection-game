@@ -1,0 +1,32 @@
+{
+  "name": "vn-connections",
+  "version": "1.0.0",
+  "description": "Vietnamese Connections Game - NYT Connections Clone",
+  "scripts": {
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
+    "dev:server": "cd server && npm run dev",
+    "dev:client": "cd client && npm run dev",
+    "build": "npm run build:server && npm run build:client",
+    "build:server": "cd server && npm run build",
+    "build:client": "cd client && npm run build",
+    "test": "npm run test:server && npm run test:client",
+    "test:server": "cd server && npm test",
+    "test:client": "cd client && npm test",
+    "test:e2e": "cd tests && npm test",
+    "install:all": "npm install && cd server && npm install && cd ../client && npm install && cd ../tests && npm install"
+  },
+  "keywords": [
+    "connections",
+    "game",
+    "vietnamese",
+    "puzzle"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1"
+  }
+}
