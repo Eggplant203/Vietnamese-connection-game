@@ -1,0 +1,34 @@
+services:
+  # Backend API Service
+  - type: web
+    name: vn-connections-api
+    env: node
+    plan: free
+    buildCommand: cd server && npm install && npm run build
+    startCommand: cd server && npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: GOOGLE_API_KEY
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: CLIENT_URL
+        value: https://vn-connections.netlify.app
+    routes:
+      - type: redirect
+        source: /*
+        destination: https://vn-connections.netlify.app/:splat
+
+  # PostgreSQL Database
+  - type: pgsql
+    name: vn-connections-db
+    databaseName: connections
+    user: connections_user
+    plan: free

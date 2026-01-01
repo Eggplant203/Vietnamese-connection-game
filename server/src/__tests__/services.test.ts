@@ -27,6 +27,7 @@ describe('Puzzle Service', () => {
   test('should correctly check valid guess', () => {
     const mockPuzzle = {
       id: 'test',
+      overallDifficulty: 'easy' as const,
       groups: [
         {
           id: '1',
@@ -53,6 +54,7 @@ describe('Puzzle Service', () => {
   test('should reject invalid guess', () => {
     const mockPuzzle = {
       id: 'test',
+      overallDifficulty: 'easy' as const,
       groups: [
         {
           id: '1',
