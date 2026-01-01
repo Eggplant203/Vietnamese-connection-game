@@ -58,7 +58,8 @@ git push -u origin main
 - **Start Command**: `npm start`
 - **Instance Type**: Free (hoặc Starter $7/month cho tốc độ cao hơn)
 
-**⚠️ LƯU Ý**: 
+**⚠️ LƯU Ý**:
+
 - Build command tự động chạy `prebuild` script để copy shared types
 - Tất cả @types packages đã ở trong dependencies (không phải devDependencies)
 
@@ -120,6 +121,7 @@ Kết quả mong đợi:
 **⚠️ QUAN TRỌNG**: Project đã có file `netlify.toml` ở root directory, Netlify sẽ tự động sử dụng config này!
 
 **Nội dung `netlify.toml`**:
+
 ```toml
 [build]
   base = "client"
@@ -139,7 +141,7 @@ Kết quả mong đợi:
 
 **Bước quan trọng**: Sau khi có URL từ Render (bước 2.4), cần cập nhật:
 
-1. Mở file `netlify.toml` 
+1. Mở file `netlify.toml`
 2. Thay đổi `VITE_API_URL` thành URL backend thực tế:
    ```toml
    VITE_API_URL = "https://your-actual-service.onrender.com/api"
@@ -153,7 +155,8 @@ Kết quả mong đợi:
 
 **Hoặc**: Vào Netlify Dashboard → Site settings → Environment variables → Override `VITE_API_URL`
 VITE_API_URL=https://your-service.onrender.com/api
-```
+
+````
 
 **⚠️ QUAN TRỌNG**: Thay `your-service.onrender.com` bằng URL thực tế từ Render (bước 2.4)
 
@@ -174,7 +177,7 @@ Quay lại **Render** → Environment Variables → Cập nhật:
 
 ```env
 CORS_ORIGIN=https://your-app.netlify.app
-```
+````
 
 Click **Manual Deploy** để áp dụng thay đổi.
 
@@ -206,6 +209,7 @@ curl https://your-service.onrender.com/health
 # Get random puzzle from database
 curl https://your-service.onrender.com/api/archive
 ```
+
 Build Fails với TypeScript Errors
 
 **Lỗi**: `Cannot find module 'express'`, `Cannot find name 'process'`
@@ -228,7 +232,8 @@ Build Fails với TypeScript Errors
 
 **Nguyên nhân**: `VITE_API_URL` không được set đúng
 
-**Giải pháp**: 
+**Giải pháp**:
+
 - ✅ Kiểm tra `netlify.toml` có đúng backend URL
 - ✅ Hoặc set trong Netlify env variables
 - ✅ Verify build log có log: `VITE_API_URL = "https://..."`
@@ -240,6 +245,7 @@ Build Fails với TypeScript Errors
 **Nguyên nhân**: SPA routing không được config
 
 **Giải pháp**: ✅ ĐÃ FIX
+
 - `client/public/_redirects` file đã có
 - `netlify.toml` có redirects config
 - Tất cả routes → `index.html` với status 200
@@ -247,7 +253,8 @@ Build Fails với TypeScript Errors
 ### Admin login gọi sai endpoint
 
 **Lỗi**: `POST https://your-app.netlify.app/api/admin/login 404`
- - Auto enabled
+
+- Auto enabled
 - Setup **Custom Domain** nếu có
 - ✅ **Redirects đã được config** trong `netlify.toml` và `client/public/_redirects`
 - Monitor builds trong **Deploys** tab CORS Error
@@ -255,9 +262,11 @@ Build Fails với TypeScript Errors
 **Lỗi**: `Access to XMLHttpRequest blocked by CORS policy`
 
 **Giải pháp**:
+
 - ✅ Kiểm tra `CORS_ORIGIN` trong Render = Netlify URL chính xác
 - ✅ Không có trailing slash: `https://app.netlify.app` ✅, `https://app.netlify.app/` ❌
 - ✅ Manual Deploy backend sau khi thay đổi env
+
 ### AI puzzle không generate được
 
 - ✅ Verify `GEMINI_API_KEY` còn quota
@@ -289,17 +298,20 @@ Tạo file `client/public/_redirects`:
 ---
 
 **Option 1**: Trong `netlify.toml` (recommended)
+
 ```toml
 [build.environment]
   VITE_API_URL = "https://your-service.onrender.com/api"
 ```
 
 **Option 2**: Trong Netlify Dashboard
+
 ```env
 VITE_API_URL=https://your-service.onrender.com/api
 ```
 
 **Files liên quan**:
+
 - `client/.env.production` - Fallback cho production builds
 - `client/.env.local` - Development local (git ignored) JWT_SECRET ít nhất 32 ký tự random
 - ✅ ADMIN_PASSWORD mạnh (>12 ký tự, chữ + số + ký tự đặc biệt)
@@ -331,29 +343,31 @@ CORS_ORIGIN=https://your-app.netlify.app
 ```📁 Project Structure (Deployment Relevant)
 
 ```
+
 connections/
-├── netlify.toml              # Netlify config (build + env + redirects)
+├── netlify.toml # Netlify config (build + env + redirects)
 ├── server/
-│   ├── package.json          # @types ở dependencies, có prebuild script
-│   ├── tsconfig.json         # types: ["node"], typeRoots config
-│   └── src/
-│       └── shared/           # Auto-copied từ ../shared qua prebuild
+│ ├── package.json # @types ở dependencies, có prebuild script
+│ ├── tsconfig.json # types: ["node"], typeRoots config
+│ └── src/
+│ └── shared/ # Auto-copied từ ../shared qua prebuild
 └── client/
-    ├── .env.production       # Production API URL
-    ├── .env.local           # Development (git ignored)
-    ├── src/
-    │   ├── env.d.ts         # Vite env types
-    │   └── services/
-    │       └── api.ts       # Sử dụng VITE_API_URL
-    └── public/
-        └── _redirects       # SPA routing fix
+├── .env.production # Production API URL
+├── .env.local # Development (git ignored)
+├── src/
+│ ├── env.d.ts # Vite env types
+│ └── services/
+│ └── api.ts # Sử dụng VITE_API_URL
+└── public/
+└── \_redirects # SPA routing fix
+
 ```
 
 ## 🆘 Support
 
 Nếu gặp vấn đề:
 
-1. **Backend issues**: 
+1. **Backend issues**:
    - Check Render logs: Dashboard → your-service → Logs
    - Verify all env variables are set
    - Test health endpoint: `https://your-service.onrender.com/health`
@@ -384,3 +398,4 @@ Nếu gặp vấn đề:
 ---
 
 **Happy Deploying! 🎉**
+```

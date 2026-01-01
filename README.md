@@ -99,13 +99,12 @@ npm run dev
 - Backend: http://localhost:3000
 - Admin Panel: http://localhost:5173/admin/login
 
-![Admin Login](pictures/admin_login.png)
-
 ### 5. Admin Access
 
 Navigate to `/admin/login` and use the password from `ADMIN_PASSWORD` env variable.
 
-![Admin Panel](pictures/login_panel.png)
+![Admin Login](pictures/admin_login.png)
+![Admin Panel](pictures/admin_panel.png)
 
 ## 🎯 How to Play
 
