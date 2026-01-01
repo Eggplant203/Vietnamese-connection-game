@@ -1,12 +1,7 @@
 import axios from 'axios';
 import type { Puzzle, AttemptResult, LeaderboardEntry, User, APIResponse } from '@shared/Types';
 
-// Debug: Log environment variable
-console.log('VITE_API_URL:', import.meta.env.VITE_API_URL);
-console.log('All env:', import.meta.env);
-
 const API_URL = import.meta.env.VITE_API_URL || '/api';
-console.log('Using API_URL:', API_URL);
 
 const api = axios.create({
   baseURL: API_URL,
